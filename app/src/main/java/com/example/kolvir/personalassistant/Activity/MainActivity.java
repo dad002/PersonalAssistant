@@ -21,7 +21,7 @@ import java.util.Collection;
 
 //проверить callback на приватность и насколько она важна
 //TODO выпить и не закусывать
-//TODO Без todo, но с todo
+//TODO Без todo, но с todo или нет(не решил ещё)
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,MyDialog.MyCallback{
 
     RecyclerView daysList;
