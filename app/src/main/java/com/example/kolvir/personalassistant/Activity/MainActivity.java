@@ -16,12 +16,13 @@ import com.melnykov.fab.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-//проверить callback на приватность и насколько она важна
+//TODO проверить callback на приватность и насколько она важна
 //TODO выпить и не закусывать
-//TODO Без todo, но с todo или нет(не решил ещё)
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,MyDialog.MyCallback{
 
     RecyclerView daysList;
@@ -39,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         floatingActionButton = findViewById(R.id.fab);
 
         initDaysRecyclerView();
-        loadDays();
         fabMenuCreating();
     }
 
@@ -95,25 +95,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void returnCallback(String name, String description) {
-
+        loadDays(name, description);
     }
 
-    private void loadDays(){
-        Collection<Day> days = getDays();
+    private void loadDays(String name, String description){
+        Day[] test = {new Day("asdfasdfas","asdfasdf"),
+                new Day("asdfasdfas","asdfasdf"),
+                new Day("asdfasdfas","asdfasdf")};
+        ArrayList<Day> days = new ArrayList<Day>();
+        days.add(new Day(name,description));
+
+        Collections.addAll(days, test);
+        daysAdapter.clearItems();
         daysAdapter.setItems(days);
     }
 
-    private Collection<Day> getDays(){
-        return Arrays.asList(
-                new Day("Мое 1 дело", "очень длинное описание дела"),
-                new Day("Мое 2 дело", "очень длинное описание дела"),
-                new Day("Мое 3 дело", "очень длинное описание дела"),
-                new Day("Мое 4 дело", "очень длинное описание дела"),
-                new Day("Мое 5 дело", "очень длинное описание дела"),
-                new Day("Мое 6 дело", "очень длинное описание дела"),
-                new Day("Мое 7 дело", "очень длинное описание дела"),
-                new Day("Мое 8 дело", "очень длинное описание дела"),
-                new Day("Мое 9 дело", "очень длинное описание дела")
+    private List<Day> getLastDays(){
+        return Arrays.asList(new Day("asdfasdfas","asdfasdf"),
+                new Day("asdfasdfas","asdfasdf"),
+                new Day("asdfasdfas","asdfasdf")
         );
     }
 
