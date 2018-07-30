@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 //проверить callback на приватность и насколько она важна
+//TODO выпить и не закусывать
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,MyDialog.MyCallback{
 
     RecyclerView daysList;
