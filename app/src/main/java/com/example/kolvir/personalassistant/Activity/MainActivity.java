@@ -32,7 +32,7 @@ import java.util.Collections;
 import java.util.List;
 
 //TODO проверить callback на приватность и насколько она важна
-//TODO выпить и не закусывать
+//TODO Сгрузить фрагмены в отдельную папку, разгрузить MainActivity
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,MyDialog.MyCallback{
 
     RecyclerView daysList;
