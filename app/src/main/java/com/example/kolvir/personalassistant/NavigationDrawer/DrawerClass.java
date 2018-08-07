@@ -22,14 +22,16 @@ import com.example.kolvir.personalassistant.R;
 
 public class DrawerClass extends AppCompatActivity{
 
-    private DrawerLayout myDrawerLayout;
-    private ListView myDrawerList;
-    private ActionBarDrawerToggle myDrawerToggle;
+    public DrawerLayout myDrawerLayout;
+    public ListView myDrawerList;
+    public ActionBarDrawerToggle myDrawerToggle;
 
     // navigation drawer title
     private CharSequence myDrawerTitle;
     // used to store app title
     private CharSequence myTitle;
+
+    private String[] viewsNames;
 
     protected void onCreateDrawer() {
 
@@ -68,7 +70,7 @@ public class DrawerClass extends AppCompatActivity{
 
 
 
-        myDrawerList.setOnItemClickListener(new MainActivity.DrawerItemClickListener());
+        myDrawerList.setOnItemClickListener(new DrawerClass.DrawerItemClickListener());
     }
 
     private class DrawerItemClickListener implements android.widget.AdapterView.OnItemClickListener {
@@ -167,5 +169,59 @@ public class DrawerClass extends AppCompatActivity{
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         myDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+
+
+    ///////////////////////
+    //Setters and Getters//
+    ///////////////////////
+    public CharSequence getMyTitle() {
+        return myTitle;
+    }
+
+    public void setMyTitle(CharSequence myTitle) {
+        this.myTitle = myTitle;
+    }
+
+    public void setMyDrawerTitle(CharSequence myDrawerTitle) {
+        this.myDrawerTitle = myDrawerTitle;
+    }
+
+    public void setViewsNames(String[] viewsNames) {
+        this.viewsNames = viewsNames;
+    }
+
+    public String[] getViewsNames() {
+        return viewsNames;
+    }
+
+    public void setMyDrawerLayout(DrawerLayout myDrawerLayout) {
+        this.myDrawerLayout = myDrawerLayout;
+    }
+
+    public void setMyDrawerList(ListView myDrawerList) {
+        this.myDrawerList = myDrawerList;
+    }
+
+    public ListView getMyDrawerList() {
+        return myDrawerList;
+    }
+
+    public DrawerLayout getMyDrawerLayout() {
+        return myDrawerLayout;
+    }
+
+    public ActionBarDrawerToggle getMyDrawerToggle() {
+        return myDrawerToggle;
+    }
+
+    public CharSequence getMyDrawerTitle() {
+        return myDrawerTitle;
+    }
+
+    public void setMyDrawerToggle(ActionBarDrawerToggle myDrawerToggle) {
+        this.myDrawerToggle = myDrawerToggle;
     }
 }
