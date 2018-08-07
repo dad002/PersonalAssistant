@@ -1,4 +1,4 @@
-package com.example.kolvir.personalassistant.Activity;
+package com.example.kolvir.personalassistant.Fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;

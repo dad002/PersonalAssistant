@@ -1,47 +1,25 @@
-package com.example.kolvir.personalassistant.Activity;
+package com.example.kolvir.personalassistant.NavigationDrawer;
 
 import android.app.Fragment;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.example.kolvir.personalassistant.Adapter.DaysAdapter;
-import com.example.kolvir.personalassistant.Dialog.MyDialog;
 import com.example.kolvir.personalassistant.Fragments.FirstFragment;
 import com.example.kolvir.personalassistant.Fragments.SecondFragment;
 import com.example.kolvir.personalassistant.Fragments.ThirdFragment;
 import com.example.kolvir.personalassistant.R;
-import com.example.kolvir.personalassistant.pojo.Day;
-import com.melnykov.fab.FloatingActionButton;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
-import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
-//TODO проверить callback на приватность и насколько она важна
-//TODO Сгрузить фрагмены в отдельную папку, разгрузить MainActivity
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,MyDialog.MyCallback{
-
-    RecyclerView daysList;
-    MyDialog df;
-    FloatingActionButton floatingActionButton;
-    private DaysAdapter daysAdapter;
+public class DrawerClass {
 
     private DrawerLayout myDrawerLayout;
     private ListView myDrawerList;
@@ -52,19 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // used to store app title
     private CharSequence myTitle;
 
-    private String[] viewsNames;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        df = new MyDialog();
-        df.registerCallback(this);
-        floatingActionButton = findViewById(R.id.fab);
-
-        initDaysRecyclerView();
-        fabMenuCreating();
+    protected void onCreateDrawer() {
 
         myTitle =  getTitle();
         myDrawerTitle = getResources().getString(R.string.menu);
@@ -101,8 +67,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        myDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        myDrawerList.setOnItemClickListener(new MainActivity.DrawerItemClickListener());
     }
+
     private class DrawerItemClickListener implements android.widget.AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(
@@ -200,89 +167,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Pass any configuration change to the drawer toggls
         myDrawerToggle.onConfigurationChanged(newConfig);
     }
-    //////////////////////////////////
-    ////END OF DRAWER CODE SECTION////
-    //////////////////////////////////
-
-    private void fabMenuCreating(){
-
-        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(this);
-
-        ImageView itemIcon = new ImageView(this);
-        itemIcon.setImageResource(R.drawable.ic_details);
-        SubActionButton button1 = itemBuilder.setContentView(itemIcon).build();
-        button1.setId(R.id.btn1);
-
-        ImageView itemIcon2 = new ImageView(this);
-        itemIcon2.setImageResource(R.drawable.ic_details2);
-        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).build();
-        button2.setId(R.id.btn2);
-
-        ImageView itemIcon3 = new ImageView(this);
-        itemIcon3.setImageResource(R.drawable.ic_details3);
-        SubActionButton button3 = itemBuilder.setContentView(itemIcon3).build();
-        button3.setId(R.id.btn3);
-
-        button1.setOnClickListener(this);
-        button2.setOnClickListener(this);
-        button3.setOnClickListener(this);
-
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
-                .addSubActionView(button1)
-                .addSubActionView(button2)
-                .addSubActionView(button3)
-                .attachTo(floatingActionButton)
-                .setRadius(300)
-                .setStartAngle(180)
-                .setEndAngle(270)
-                .build();
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btn1:
-                Toast.makeText(this,"btn1",Toast.LENGTH_SHORT).show();
-                df.show(getFragmentManager(), "dl");
-                break;
-            case R.id.btn2:
-                Toast.makeText(this,"btn2",Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.btn3:
-                Toast.makeText(this,"btn3",Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
-
-    @Override
-    public void returnCallback(String name, String description) {
-        loadDays(name, description);
-    }
-
-    private void loadDays(String name, String description){
-        Day[] test = {new Day("asdfasdfas","asdfasdf"),
-                new Day("asdfasdfas","asdfasdf"),
-                new Day("asdfasdfas","asdfasdf")};
-        ArrayList<Day> days = new ArrayList<Day>();
-        days.add(new Day(name,description));
-
-        Collections.addAll(days, test);
-        daysAdapter.clearItems();
-        daysAdapter.setItems(days);
-    }
-
-    private List<Day> getLastDays(){
-        return Arrays.asList(new Day("asdfasdfas","asdfasdf"),
-                new Day("asdfasdfas","asdfasdf"),
-                new Day("asdfasdfas","asdfasdf")
-        );
-    }
-
-    private void initDaysRecyclerView(){
-        daysList = findViewById(R.id.days_list);
-        daysList.setLayoutManager(new LinearLayoutManager(this));
-        daysAdapter = new DaysAdapter();
-        daysList.setAdapter(daysAdapter);
-    }
-
 }
