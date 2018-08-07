@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +20,7 @@ import com.example.kolvir.personalassistant.Fragments.ThirdFragment;
 import com.example.kolvir.personalassistant.R;
 
 
-public class DrawerClass {
+public class DrawerClass extends AppCompatActivity{
 
     private DrawerLayout myDrawerLayout;
     private ListView myDrawerList;
