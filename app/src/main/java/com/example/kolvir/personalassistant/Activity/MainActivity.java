@@ -29,7 +29,7 @@ import com.melnykov.fab.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
-import com.example.kolvir.personalassistant.NavigationDrawer.DrawerClass;
+//import com.example.kolvir.personalassistant.NavigationDrawer.DrawerClass;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FloatingActionButton floatingActionButton;
     private DaysAdapter daysAdapter;
 
-    public DrawerClass drawerClass = new DrawerClass();
+   // public DrawerClass drawerClass = new DrawerClass();
 
     /*private DrawerLayout myDrawerLayout;
     private ListView myDrawerList;
@@ -70,145 +70,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initDaysRecyclerView();
         fabMenuCreating();
 
-        drawerClass.setMyTitle(getTitle());
-        // myTitle =  getTitle();
-        drawerClass.setMyTitle(getResources().getString(R.string.menu));
-        //myDrawerTitle = getResources().getString(R.string.menu);
-        drawerClass.setMyDrawerToggle();
-
-        // load slide menu items
-        //viewsNames = getResources().getStringArray(R.array.views_array);
-        drawerClass.setViewsNames(getResources().getStringArray(R.array.views_array));
-        //myDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerClass.setMyDrawerLayout((DrawerLayout) findViewById(R.id.drawer_layout));
-        //myDrawerList = (ListView) findViewById(R.id.left_drawer);
-        drawerClass.setMyDrawerList((ListView) findViewById(R.id.left));
-
-        drawerClass.getMyDrawerList().setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, drawerClass.getViewsNames()));
-
-        // enabling action bar app icon and behaving it as toggle button
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-        drawerClass.getMyDrawerToggle(myDrawerToggle) = new ActionBarDrawerToggle(this, drawerClass.getMyDrawerLayout(),
-                R.string.open_menu,
-                R.string.close_menu
-        ) {
-            public void onDrawerClosed(View view) {
-                getSupportActionBar().setTitle(drawerClass.getTitle());
-                // calling onPrepareOptionsMenu() to show action bar icons
-                invalidateOptionsMenu();
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                getSupportActionBar().setTitle(drawerClass.getMyDrawerTitle());
-                // calling onPrepareOptionsMenu() to hide action bar icons
-                invalidateOptionsMenu();
-            }
-        };
-        drawerClass.getMyDrawerLayout().setDrawerListener(drawerClass.getMyDrawerToggle());
-
-
-        drawerClass.getMyDrawerList().setOnItemClickListener(new DrawerItemClickListener());
-    }
-    private class DrawerItemClickListener implements android.widget.AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(
-                AdapterView<?> parent, View view, int position, long id
-        ) {
-            // display view for selected nav drawer item
-            displayView(position);
-        }
-    }
-    private void displayView(int position) {
-        // update the main content by replacing fragments
-        Fragment fragment = null;
-        switch (position) {
-            case 0:
-                fragment = new FirstFragment();
-                break;
-            case 1:
-                fragment = new SecondFragment();
-                break;
-            case 2:
-                fragment = new ThirdFragment();
-                break;
-            default:
-                break;
+        //drawerClass.onCreateDrawer();
         }
 
-        if (fragment != null) {
-            android.app.FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, fragment).commit();
 
-            // update selected item and title, then close the drawer
-            drawerClass.getMyDrawerList().setItemChecked(position, true);
-            drawerClass.getMyDrawerList().setSelection(position);
-            setTitle(drawerClass.getViewsNames()[position]);
-            drawerClass.getMyDrawerLayout().closeDrawer(drawerClass.getMyDrawerList());
-
-        } else {
-            // error in creating fragment
-            Log.e("MainActivity", "Error in creating fragment");
-        }
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // toggle nav drawer on selecting action bar app icon/title
-        if (drawerClass.getMyDrawerToggle().onOptionsItemSelected(item)) {
-            return true;
-        }
-        // Handle action bar actions click
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /**
-     * Called when invalidateOptionsMenu() is triggered
-     */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // if navigation drawer is opened, hide the action items
-        boolean drawerOpen = drawerClass.getMyDrawerLayout().isDrawerOpen(drawerClass.getMyDrawerList());
-        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        drawerClass.getMyTitle() = title;
-        getSupportActionBar().setTitle(drawerClass.getMyTitle());
-    }
-
-    /**
-     * When using the ActionBarDrawerToggle, you must call it during
-     * onPostCreate() and onConfigurationChanged()...
-     */
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        drawerClass.getMyDrawerToggle().syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
-        drawerClass.getMyDrawerToggle().onConfigurationChanged(newConfig);
-    }
     //////////////////////////////////
     ////END OF DRAWER CODE SECTION////
     //////////////////////////////////
