@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         floatingActionButton = findViewById(R.id.fab);
 
         dbhelper = new DatabaseHelper(this);
+        loadDATA();
         initDaysRecyclerView();
         fabMenuCreating();
     }
