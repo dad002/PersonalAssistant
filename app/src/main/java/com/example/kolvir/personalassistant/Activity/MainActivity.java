@@ -1,63 +1,40 @@
 package com.example.kolvir.personalassistant.Activity;
 
-import android.app.Fragment;
-import android.content.res.Configuration;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.kolvir.personalassistant.Adapter.DaysAdapter;
+import com.example.kolvir.personalassistant.Database.DatabaseHelper;
 import com.example.kolvir.personalassistant.Dialog.MyDialog;
-import com.example.kolvir.personalassistant.Fragments.FirstFragment;
-import com.example.kolvir.personalassistant.Fragments.SecondFragment;
-import com.example.kolvir.personalassistant.Fragments.ThirdFragment;
 import com.example.kolvir.personalassistant.R;
 import com.example.kolvir.personalassistant.pojo.Day;
 import com.melnykov.fab.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
-//import com.example.kolvir.personalassistant.NavigationDrawer.DrawerClass;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+
 
 //TODO проверить callback на приватность и насколько она важна
-//TODO Сгрузить фрагмены в отдельную папку, разгрузить MainActivity
+//TODO Убрать loadDATA в отдельный поток
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,MyDialog.MyCallback{
+
+    DatabaseHelper dbhelper;
 
     RecyclerView daysList;
     MyDialog df;
     FloatingActionButton floatingActionButton;
-    private DaysAdapter daysAdapter;
+    DaysAdapter daysAdapter;
 
-   // public DrawerClass drawerClass = new DrawerClass();
-
-    /*private DrawerLayout myDrawerLayout;
-    private ListView myDrawerList;
-    private ActionBarDrawerToggle myDrawerToggle;
-
-    // navigation drawer title
-    private CharSequence myDrawerTitle;
-    // used to store app title
-    private CharSequence myTitle;
-
-    private String[] viewsNames;
-    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,16 +44,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         df.registerCallback(this);
         floatingActionButton = findViewById(R.id.fab);
 
+        dbhelper = new DatabaseHelper(this);
         initDaysRecyclerView();
         fabMenuCreating();
+    }
 
-        //drawerClass.onCreateDrawer();
+    private void rendering(ArrayList<Day> data){
+        daysAdapter.setItems(data);
+    }
+
+    private void loadDATA() {
+        ArrayList<Day> tmp = new ArrayList<>();
+        SQLiteDatabase database = dbhelper.getWritableDatabase();
+        Cursor cursor = database.query(DatabaseHelper.TABLE_NAME, null,null,null,null,null,null);
+
+        if (cursor.moveToFirst()){
+
+            int titleIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_TITLE);
+            int descriptionIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_DESCRIPTION);
+
+            do{
+                tmp.add(new Day(cursor.getString(titleIndex), cursor.getString(descriptionIndex)));
+            }while (cursor.moveToNext());
         }
 
+        cursor.close();
+        database.close();
 
-    //////////////////////////////////
-    ////END OF DRAWER CODE SECTION////
-    //////////////////////////////////
+        rendering(tmp);
+    }
 
     private void fabMenuCreating(){
 
@@ -101,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
 
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
+        new FloatingActionMenu.Builder(this)
                 .addSubActionView(button1)
                 .addSubActionView(button2)
                 .addSubActionView(button3)
@@ -114,42 +110,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        boolean btn3 = false;
+        SQLiteDatabase database = dbhelper.getWritableDatabase();
         switch (v.getId()){
             case R.id.btn1:
                 Toast.makeText(this,"btn1",Toast.LENGTH_SHORT).show();
                 df.show(getFragmentManager(), "dl");
                 break;
             case R.id.btn2:
-                Toast.makeText(this,"btn2",Toast.LENGTH_SHORT).show();
+                Cursor cursor = database.query(DatabaseHelper.TABLE_NAME, null,null,null,null,null,null);
+
+                if (cursor.moveToFirst()){
+                    int idIndex = cursor.getColumnIndex(DatabaseHelper.KEY_ID);
+                    int titleIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_TITLE);
+                    int descriptionIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_DESCRIPTION);
+                        do{
+                            Log.d("mLog", "ID =" + cursor.getInt(idIndex) +
+                                    ", title = " + cursor.getString(titleIndex) +
+                                    ", description = " + cursor.getString(descriptionIndex));
+                        }while(cursor.moveToNext());
+                }else
+                    Log.d("mLog","0 rows");
+                cursor.close();
+                dbhelper.close();
                 break;
             case R.id.btn3:
+
+                daysAdapter.clearItems();
+                database.delete(DatabaseHelper.TABLE_NAME, null, null);
+
                 Toast.makeText(this,"btn3",Toast.LENGTH_SHORT).show();
                 break;
         }
+        dbhelper.close();
+
     }
 
     @Override
     public void returnCallback(String name, String description) {
-        loadDays(name, description);
-    }
+        SQLiteDatabase database = dbhelper.getWritableDatabase();
 
-    private void loadDays(String name, String description){
-        Day[] test = {new Day("asdfasdfas","asdfasdf"),
-                new Day("asdfasdfas","asdfasdf"),
-                new Day("asdfasdfas","asdfasdf")};
-        ArrayList<Day> days = new ArrayList<Day>();
-        days.add(new Day(name,description));
+        ContentValues contentValues = new ContentValues();
 
-        Collections.addAll(days, test);
-        daysAdapter.clearItems();
-        daysAdapter.setItems(days);
-    }
+        contentValues.put(DatabaseHelper.COLUMN_TITLE, name);
+        contentValues.put(DatabaseHelper.COLUMN_DESCRIPTION, description);
 
-    private List<Day> getLastDays(){
-        return Arrays.asList(new Day("asdfasdfas","asdfasdf"),
-                new Day("asdfasdfas","asdfasdf"),
-                new Day("asdfasdfas","asdfasdf")
-        );
+        database.insert(DatabaseHelper.TABLE_NAME, null , contentValues);
+        dbhelper.close();
+
+        ArrayList<Day> tmp = new ArrayList<Day>();
+        tmp.add(new Day(name,description));
+        rendering(tmp);
     }
 
     private void initDaysRecyclerView(){

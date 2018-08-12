@@ -17,7 +17,7 @@ import java.util.List;
 
 public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DaysViewHolder>{
 
-    private List<Day> dayList = new ArrayList<>();
+    private ArrayList<Day> dayList = new ArrayList<>();
 
     @NonNull
     @Override
@@ -36,8 +36,10 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DaysViewHolder
         return dayList.size();
 }
 
-    public void setItems(Collection<Day> days){
-        dayList.addAll(days);
+    public void setItems(ArrayList<Day> days){
+        if (!days.isEmpty()){
+            dayList.addAll(days);
+        }
         notifyDataSetChanged();
     }
 
